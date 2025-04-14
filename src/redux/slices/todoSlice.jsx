@@ -1,4 +1,4 @@
-// todoSlice.js
+// src/redux/slices/todoSlice.js
 
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
@@ -8,52 +8,64 @@ export const fetchTodos = createAsyncThunk('todos/fetchTodos', async () => {
     return response.json();
 });
 
-// Initial state
 const initialState = {
     todos: [],
     loading: false,
     error: null,
-    filter: 'ALL',
-    sort: 'id', 
+    filter: 'all',
+    sort: 'id',
 };
 
-// Create slice
 const todoSlice = createSlice({
     name: 'todos',
     initialState,
     reducers: {
         deleteTodo: (state, action) => {
-            state.todos = state.todos.filter(item => item.id != action.payload)
+            state.todos = state.todos.filter(item => item.id !== action.payload);
         },
         setFilter: (state, action) => {
-            state.todos = action.payload
+            state.filter = action.payload;
         },
         setSort: (state, action) => {
-            state.todos = action.payload
+            state.sort = action.payload;
         },
         updateTodo: (state, action) => {
-            const { id, title } = action.payload;
-            const todo = state.todos.find(todo => todo.id === id);
-            if (todo) {
-                todo.title = title; 
+            const index = state.todos.findIndex(todo => todo.id === action.payload.id);
+            if (index !== -1) {
+                state.todos[index] = {
+                    ...state.todos[index],
+                    title: action.payload.title,
+                    updated_at: new Date().toISOString(),
+                };
             }
+        },
+        addTodo: (state, action) => {
+            const newTodo = {
+                ...action.payload,
+                id: Date.now(),
+                completed: false,
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString(),
+            };
+            state.todos.unshift(newTodo);
         },
     },
     extraReducers: (builder) => {
         builder
             .addCase(fetchTodos.pending, (state) => {
-                state.status = 'loading';
+                state.loading = true;
+                state.error = null;
             })
             .addCase(fetchTodos.fulfilled, (state, action) => {
-                state.status = 'success';
+                state.loading = false;
                 state.todos = action.payload;
             })
             .addCase(fetchTodos.rejected, (state, action) => {
-                state.status = 'failed';
+                state.loading = false;
                 state.error = action.error.message;
             });
     },
 });
 
-export const { deleteTodo,setFilter,setSort,updateTodo } = todoSlice.actions;
+export const { deleteTodo, setFilter, setSort, updateTodo, addTodo } = todoSlice.actions;
 export default todoSlice.reducer;
