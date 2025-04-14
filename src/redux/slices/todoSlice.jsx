@@ -1,8 +1,8 @@
-// src/redux/slices/todoSlice.js
+
 
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-// Async thunk to fetch todos
+
 export const fetchTodos = createAsyncThunk('todos/fetchTodos', async () => {
     const response = await fetch('https://jsonplaceholder.typicode.com/todos');
     return response.json();
