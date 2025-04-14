@@ -1,8 +1,7 @@
-import { View, Text, Button, TouchableOpacity, VirtualizedList, StyleSheet, Modal, TextInput, Image } from 'react-native';
+import { View, Text, TouchableOpacity, VirtualizedList, StyleSheet, Modal, TextInput, Image } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteTodo, fetchTodos, setFilter, setSort, updateTodo } from '../redux/slices/todoSlice';
-import { Picker } from '@react-native-picker/picker';
 import { useNavigation } from '@react-navigation/native';
 import { Dropdown } from 'react-native-element-dropdown';
 
@@ -97,9 +96,9 @@ const MainScreen = () => {
                     />
                 </View>
 
-
+                {/* Here i have used VirtualizedList for better performance of list */}
                 {loading ? (
-                    <Text>Loading...</Text>
+                    <Text style={styles.text}>Loading...</Text>
                 ) : (
                     <VirtualizedList
                         data={sortedTodos}
