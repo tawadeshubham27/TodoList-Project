@@ -21,7 +21,7 @@ react {
     //   The list of variants to that are debuggable. For those we're going to
     //   skip the bundling of the JS bundle and the assets. By default is just 'debug'.
     //   If you add flavors like lite, prod, etc. you'll have to list your debuggableVariants.
-    // debuggableVariants = ["liteDebug", "prodDebug"]
+    // debuggableVariants = ["liteDebug", "prodDebug"] 
 
     /* Bundling */
     //   A list containing the node command and its flags. Default is just 'node'.
@@ -111,9 +111,35 @@ dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
 
+    // Firebase BoM (Bill of Materials) for Firebase dependencies
+    implementation platform('com.google.firebase:firebase-bom:33.12.0')
+
+    // Firebase Authentication (optional)
+    implementation 'com.google.firebase:firebase-auth'
+
+    // Firebase Analytics (optional)
+    implementation 'com.google.firebase:firebase-analytics'
+
+    // Play Services Authentication
+    implementation 'com.google.android.gms:play-services-auth:20.7.0'
+
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")
     } else {
         implementation jscFlavor
     }
+
+    implementation(project(':react-native-onesignal')){
+      exclude group: 'com.google.android.gms'
+    }
+
+    implementation(project(':react-native-maps')){
+      exclude group: 'com.google.android.gms'
+    }
+    implementation 'com.google.android.gms:play-services-base:18.0.1'
+    implementation 'com.google.android.gms:play-services-location:19.0.1'
+    implementation 'com.google.android.gms:play-services-maps:18.0.2'
+
 }
+
+apply plugin: 'com.google.gms.google-services'  // Required for Firebase to work
